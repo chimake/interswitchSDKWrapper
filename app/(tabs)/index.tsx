@@ -1,98 +1,196 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import React from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Card, Chip, List, Paragraph, Title } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const features = [
+    {
+      title: 'Card Payments',
+      description: 'Accept Visa, Mastercard, and Verve cards',
+      icon: '💳'
+    },
+    {
+      title: 'Bank Transfer',
+      description: 'Direct bank account transfers',
+      icon: '🏦'
+    },
+    {
+      title: 'USSD Payments',
+      description: 'Mobile money via USSD codes',
+      icon: '📱'
+    },
+    {
+      title: 'QR Payments',
+      description: 'Quick scan-to-pay functionality',
+      icon: '🔲'
+    },
+  ];
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
+        {/* Welcome Section */}
+        <Card style={styles.welcomeCard}>
+          <Card.Content>
+            <Title style={styles.welcomeTitle}>Interswitch SDK Demo</Title>
+            <Paragraph style={styles.welcomeText}>
+              Complete payment solution for your mobile application. 
+              Test all payment methods in sandbox mode.
+            </Paragraph>
+            <Chip mode="outlined" style={styles.testModeChip} textStyle={styles.chipText}>
+              🧪 Test Mode Active
+            </Chip>
+          </Card.Content>
+        </Card>
+
+        {/* Quick Stats */}
+        <View style={styles.statsContainer}>
+          <Card style={styles.statCard}>
+            <Card.Content style={styles.statContent}>
+              <Title style={styles.statNumber}>₦0.00</Title>
+              <Paragraph style={styles.statLabel}>Total Processed</Paragraph>
+            </Card.Content>
+          </Card>
+          <Card style={styles.statCard}>
+            <Card.Content style={styles.statContent}>
+              <Title style={styles.statNumber}>0</Title>
+              <Paragraph style={styles.statLabel}>Transactions</Paragraph>
+            </Card.Content>
+          </Card>
+        </View>
+
+        {/* Features Section */}
+        <Title style={styles.sectionTitle}>Supported Payment Methods</Title>
+        {features.map((feature, index) => (
+          <Card key={index} style={styles.featureCard}>
+            <List.Item
+              title={feature.title}
+              description={feature.description}
+              left={() => (
+                <View style={styles.iconContainer}>
+                  <Paragraph style={styles.featureIcon}>{feature.icon}</Paragraph>
+                </View>
+              )}
+            />
+          </Card>
+        ))}
+
+        {/* Quick Actions */}
+        <View style={styles.actionsContainer}>
+          <Link href="/payment" asChild>
+            <Button
+              mode="contained"
+              style={styles.primaryButton}
+              contentStyle={styles.buttonContent}
+              icon="credit-card"
+            >
+              Make Test Payment
+            </Button>
+          </Link>
+          
+          <Link href="/history" asChild>
+            <Button
+              mode="outlined"
+              style={styles.secondaryButton}
+              contentStyle={styles.buttonContent}
+              icon="history"
+            >
+              View Transaction History
+            </Button>
+          </Link>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f6fa',
   },
-  stepContainer: {
-    gap: 8,
+  scrollContainer: {
+    padding: 16,
+  },
+  welcomeCard: {
+    marginBottom: 20,
+    elevation: 4,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    textAlign: 'center',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  welcomeText: {
+    textAlign: 'center',
+    color: '#7f8c8d',
+    marginBottom: 16,
+    lineHeight: 22,
+  },
+  testModeChip: {
+    alignSelf: 'center',
+  },
+  chipText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 24,
+  },
+  statCard: {
+    flex: 1,
+    elevation: 2,
+  },
+  statContent: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#3498db',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#7f8c8d',
+    marginTop: 4,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 16,
+  },
+  featureCard: {
+    marginBottom: 8,
+    elevation: 1,
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  featureIcon: {
+    fontSize: 24,
+  },
+  actionsContainer: {
+    marginTop: 24,
+    gap: 12,
+  },
+  primaryButton: {
+    backgroundColor: '#3498db',
+  },
+  secondaryButton: {
+    borderColor: '#3498db',
+  },
+  buttonContent: {
+    paddingVertical: 8,
   },
 });
